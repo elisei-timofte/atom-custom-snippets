@@ -162,7 +162,7 @@
     """
 
   'validation methods':
-    'prefix': 'validation methods'
+    'prefix': 'v methods'
     'body': """
       validate: (field) =>
         user =
@@ -177,7 +177,6 @@
           options = {}
 
         if !field || @state[field]
-          # Object.assign @state.errors, validate(UserSchema, doc, options)
           validator = UserSchema.newContext()
           validator.validate user, options
 
