@@ -1,0 +1,194 @@
+# Your snippets
+#
+# Atom snippets allow you to enter a simple prefix in the editor and hit tab to
+# expand the prefix into a larger code block with templated values.
+#
+# You can create a new snippet in this file by typing "snip" and then hitting
+# tab.
+#
+# An example CoffeeScript snippet to expand log to console.log:
+#
+# '.source.coffee':
+#   'Console log':
+#     'prefix': 'log'
+#     'body': 'console.log $1'
+#
+# Each scope (e.g. '.source.coffee' above) can only be declared once.
+#
+# This file uses CoffeeScript Object Notation (CSON).
+# If you are unfamiliar with CSON, you can read more about it in the
+# Atom Flight Manual:
+# http://flight-manual.atom.io/using-atom/sections/basic-customization/#_cson
+
+
+'.source.coffee':
+  'import React...':
+    'prefix': 'import React'
+    'body': 'import React, { Component } from "react"'
+
+  'import React Setup...':
+    'prefix': 'import React Setup'
+    'body': """
+      import _                    from 'lodash'
+      import React, { Component } from 'react'
+      import { Meteor }           from "meteor/meteor"
+      import { withRouter }       from "react-router-dom"
+      import { withTracker }      from "meteor/react-meteor-data"
+
+      $1
+    """
+
+  'import Meteor...':
+    'prefix': 'import Meteor'
+    'body': 'import { Meteor } from "meteor/meteor"'
+
+  'import Lodash...':
+    'prefix': 'import Lodash'
+    'body': 'import _ from "lodash"'
+
+  'import Colors...':
+    'prefix': 'import Colors'
+    'body': 'import Colors from "/app/imports/client/components/core/colors"'
+
+  'import Component...':
+    'prefix': 'import Component'
+    'body': 'import $1 from "/app/imports/client/components/$2/$2"'
+
+  'import Collection...':
+    'prefix': 'import Collection'
+    'body': 'import $1 from "/app/imports/collections/$2"'
+
+  'import Methods...':
+    'prefix': 'import Methods'
+    'body': 'import "/app/imports/methods/$1_methods"'
+
+  'import Collection and Methods...':
+    'prefix': 'import Collection and Methods'
+    'body': """
+      import $1 from "/app/imports/collections/$2"
+      import "/app/imports/methods/$2_methods"
+    """
+  'import withTracker...':
+    'prefix': 'import withTracker'
+    'body': 'import { withTracker } from "meteor/react-meteor-data"'
+
+  'import withRouter...':
+    'prefix': 'import withRouter'
+    'body': 'import { withRouter } from "react-router-dom"'
+
+  'export withTracker...':
+    'prefix': 'export withTracker'
+    'body': """
+      export default (withTracker (props) ->
+        $2
+      )($1)
+    """
+  'export withRouter...':
+    'prefix': 'export withRouter'
+    'body': 'export default withRouter($1)'
+
+  'export withTracker(withRouter)...':
+    'prefix': 'export withTracker(withRouter)'
+    'body': """
+      export default (withTracker (props) ->
+        $2
+      )(withRouter($1))
+    """
+
+  'class React Component...':
+    'prefix': 'class React'
+    'body': """
+      export default class $1 extends Component
+        constructor: (props) ->
+          super(props)
+          @state = {}
+
+        render: ->
+          $2
+    """
+
+  'class React Component Setup...':
+    'prefix': 'class React Setup'
+    'body': """
+      import _                    from 'lodash'
+      import React, { Component } from 'react'
+      import { Meteor }           from "meteor/meteor"
+      import { withRouter }       from "react-router-dom"
+      import { withTracker }      from "meteor/react-meteor-data"
+
+      class $1 extends Component
+        constructor: (props) ->
+          super(props)
+          @state = {}
+
+        render: ->
+          <>
+            $2
+          </>
+
+      export default (withTracker (props) ->
+        $3
+      )(withRouter($1))
+    """
+
+  'style jsx...':
+    'prefix': 'st'
+    'body': """
+      <style jsx=''>{"
+        $1
+        "}
+      </style>
+    """
+
+  'div html element...':
+    'prefix': 'div'
+    'body': """
+      <div classname'$1'>
+        $2
+      </div>
+    """
+  'h1 html element...':
+    'prefix': 'h1'
+    'body': """
+      <h1 classname'$1'>$2</h1>
+    """
+
+  'input validation':
+    'prefix': 'input validation'
+    'body': """
+            onFocus   = {=> @resetErrors('email')}
+            onBlur    = {=> @validate('email')}
+            errors    = {@state.errors.email}
+    """
+
+  'validation methods':
+    'prefix': 'validation methods'
+    'body': """
+      validate: (field) =>
+        user =
+          email:    @state.email
+          password: @state.password
+
+        if field
+          delete @state.errors[field]
+          options = {keys: [field]}
+        else
+          @state.errors = {}
+          options = {}
+
+        if !field || @state[field]
+          # Object.assign @state.errors, validate(UserSchema, doc, options)
+          validator = UserSchema.newContext()
+          validator.validate user, options
+
+          validator.validationErrors().forEach (error) =>
+            (@state.errors[error.name] ||= []).push(validator.keyErrorMessage(error.name) + '.')
+
+        @setState {errors: @state.errors}
+
+        if _.isEmpty(@state.errors) then user else false
+
+      resetErrors: (field) =>
+        delete @state.errors[field]
+        @setState {errors: @state.errors}
+    """
