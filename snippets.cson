@@ -165,7 +165,7 @@
     'prefix': 'v methods'
     'body': """
       validate: (field) =>
-        user =
+        data =
           email:    @state.email
           password: @state.password
 
@@ -178,14 +178,14 @@
 
         if !field || @state[field]
           validator = UserSchema.newContext()
-          validator.validate user, options
+          validator.validate data, options
 
           validator.validationErrors().forEach (error) =>
             (@state.errors[error.name] ||= []).push(validator.keyErrorMessage(error.name) + '.')
 
         @setState {errors: @state.errors}
 
-        if _.isEmpty(@state.errors) then user else false
+        if _.isEmpty(@state.errors) then data else false
 
       resetErrors: (field) =>
         delete @state.errors[field]
