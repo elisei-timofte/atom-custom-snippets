@@ -174,11 +174,11 @@
           options = {keys: [field]}
         else
           @state.errors = {}
-          options = {}
+          options = {keys: ['title']}
 
         if !field || @state[field]
-          validator = UserSchema.newContext()
-          validator.validate data, options
+          validator = UserSchema.simpleSchema().newContext()
+          validator.validate validator.clean(data, {mutate: true}), options
 
           validator.validationErrors().forEach (error) =>
             (@state.errors[error.name] ||= []).push(validator.keyErrorMessage(error.name) + '.')
