@@ -24,11 +24,11 @@
 '.source.coffee':
   'import React...':
     'prefix': 'import React'
-    'body': 'import React, { Component } from "react"'
+    'body':   'import React, { Component } from "react"'
 
   'import React Setup...':
     'prefix': 'import React Setup'
-    'body': """
+    'body':   """
       import _                    from 'lodash'
       import React, { Component } from 'react'
       import { Meteor }           from "meteor/meteor"
@@ -40,71 +40,82 @@
 
   'import Meteor...':
     'prefix': 'import Meteor'
-    'body': 'import { Meteor } from "meteor/meteor"'
+    'body':   'import { Meteor } from "meteor/meteor"'
 
   'import Lodash...':
     'prefix': 'import Lodash'
-    'body': 'import _ from "lodash"'
+    'body':   'import _ from "lodash"'
 
   'import Colors...':
     'prefix': 'import Colors'
-    'body': 'import Colors from "/app/imports/client/components/core/colors"'
+    'body':   'import Colors from "/app/imports/common/colors"'
 
   'import Component...':
     'prefix': 'import Component'
     'body': 'import $1 from "/app/imports/client/components/$2/$2"'
 
-  'import Collection...':
-    'prefix': 'import Collection'
-    'body': 'import $1 from "/app/imports/collections/$2"'
+  'import collection...':
+    'prefix': 'import collection'
+    'body':   'import ${1:People} from "/app/imports/collections/${2:people}"'
 
-  'import Methods...':
-    'prefix': 'import Methods'
-    'body': 'import "/app/imports/methods/$1_methods"'
+  'import methods...':
+    'prefix': 'import methods'
+    'body':   'import "/app/imports/methods/${1:projects}_methods"'
 
-  'import Collection and Methods...':
-    'prefix': 'import Collection and Methods'
+  'import collection and methods...':
+    'prefix': 'import collection and methods'
     'body': """
-      import $1 from "/app/imports/collections/$2"
-      import "/app/imports/methods/$2_methods"
+      import ${1:People} from "/app/imports/collections/${2:people}"
+      import "/app/imports/methods/${2:people}_methods"
     """
+
   'import withTracker...':
     'prefix': 'import withTracker'
-    'body': 'import { withTracker } from "meteor/react-meteor-data"'
+    'body':   'import { withTracker } from "meteor/react-meteor-data"'
 
   'import withRouter...':
     'prefix': 'import withRouter'
-    'body': 'import { withRouter } from "react-router-dom"'
+    'body':   'import { withRouter } from "react-router-dom"'
+
+  'import Link...':
+    'prefix': 'import Link'
+    'body':   'import { Link } from "react-router-dom"'
 
   'export withTracker...':
     'prefix': 'export withTracker'
     'body': """
       export default (withTracker (props) ->
-        $2
-      )($1)
+        ${2:return \\{\\}}
+      )(${1:MyComponent})
     """
   'export withRouter...':
     'prefix': 'export withRouter'
-    'body': 'export default withRouter($1)'
+    'body':   'export default withRouter(${1:MyComponent})'
 
-  'export withTracker(withRouter)...':
-    'prefix': 'export withTracker(withRouter)'
+  'export withRouter(withTracker)...':
+    'prefix': 'export withRouter(withTracker)'
     'body': """
-      export default (withTracker (props) ->
-        $2
-      )(withRouter($1))
+      export default withRouter(
+        (withTracker (props) ->
+          ${2:return \\{\\}}
+        )(${1:MyComponent})
+      )
     """
 
   'class React Component...':
     'prefix': 'class React'
-    'body': """
-      export default class $1 extends Component
+    'body':   """
+      import _                    from 'lodash'
+      import React, { Component } from 'react'
+      import { Meteor }           from "meteor/meteor"
+
+      export default class ${1:MyComponent} extends Component
         constructor: (props) ->
           super(props)
           @state = {}
 
         render: ->
-          $2
+          ${2:<></>}
     """
 
   'class React Component Setup...':
@@ -116,7 +127,7 @@
       import { withRouter }       from "react-router-dom"
       import { withTracker }      from "meteor/react-meteor-data"
 
-      class $1 extends Component
+      class ${1:MyComponent} extends Component
         constructor: (props) ->
           super(props)
           @state = {}
@@ -126,31 +137,126 @@
             $2
           </>
 
-      export default (withTracker (props) ->
-        $3
-      )(withRouter($1))
+      export default withRouter(
+        (withTracker (props) ->
+          $3
+        )($1)
+      )
     """
 
   'style jsx...':
-    'prefix': 'st'
-    'body': """
+    'prefix': 'style jsx'
+    'body':   """
       <style jsx=''>{"
         $1
         "}
       </style>
     """
 
-  'div html element...':
-    'prefix': 'div'
-    'body': """
-      <div classname'$1'>
+  'import schema...':
+    'prefix': 'import schema'
+    'body':   'import SimpleSchema from "simpl-schema"'
+
+  'import schema audit fields...':
+    'prefix': 'import schema audit fields'
+    'body':   """
+      import SchemaAuditFields from "/app/imports/common/schema_audit_fields"
+    """
+
+  'import schema timestamps...':
+    'prefix': 'import schema timestamps'
+    'body':   """
+      import SchemaTimestamps from "/app/imports/common/schema_timestamps"
+    """
+
+  'attach schema...':
+    'prefix': 'attach schema'
+    'body':   """
+      ${1:Groups}.attachSchema new SimpleSchema {
+        ...SchemaAuditFields
+        ${2:projectId: {type: String, max: 20, index: 1}}
+      }
+    """
+
+  'meteor publish...':
+    'prefix': 'Meteor.publish'
+    'body':   """
+      Meteor.publish "${1:people.managers}", (${2:param}) ->
+        $3
+    """
+
+  'meteor subscribe...':
+    'prefix': 'Meteor.subscribe'
+    'body':   """
+      ${1:subscription = }Meteor.subscribe "${2:people.byUser}"${3:, param}
+    """
+
+  'meteor call...':
+    'prefix': 'Meteor.call'
+    'body':   """
+      Meteor.call "${1:workspaces.insert}", ${2:data}, (err, ${3:wId}) =>
+        return console.error err if err?
+
+        $4
+    """
+
+  'div className...':
+    'prefix': 'div className'
+    'body':   """
+      <div className="${1:my-class}">
         $2
       </div>
     """
+
+  'span className...':
+    'prefix': 'span className'
+    'body':   """
+      <span className="${1:my-class}"> $2 </span>
+    """
+
+  'img...':
+    'prefix': 'img'
+    'body':   """
+      <img src="/assets/${1:user-circle.svg}"/>
+    """
+
+  'className...':
+    'prefix': 'cln'
+    'body':   """
+      className="${1:my-class}"
+    """
+
+  'box-sizing...':
+    'prefix': 'box-sizing'
+    'body':   """
+      box-sizing: border-box;
+    """
+
+  'insert comment...':
+    'prefix': 'insert comment'
+    'body':   """
+      {
+        # ${1: CoffeeScript comment in JSX}
+        null
+      }
+    """
+
   'h1 html element...':
     'prefix': 'h1'
     'body': """
-      <h1 classname'$1'>$2</h1>
+      <h1 classname="${1:my-class}">$2</h1>
+    """
+
+  'h2 html element...':
+    'prefix': 'h2'
+    'body': """
+      <h2 classname="${1:my-class}">$2</h2>
+    """
+
+  'h3 html element...':
+    'prefix': 'h3'
+    'body': """
+      <h3 classname="${1:my-class}">$2</h3>
     """
 
   'input validation':
