@@ -50,6 +50,10 @@
     'prefix': 'import Colors'
     'body':   'import Colors from "/app/imports/common/colors"'
 
+  'import Variables...':
+    'prefix': 'import Variables'
+    'body':   'import Variables from "/app/imports/common/variables"'
+
   'import Component...':
     'prefix': 'import Component'
     'body': 'import $1 from "/app/imports/client/components/$2/$2"'
